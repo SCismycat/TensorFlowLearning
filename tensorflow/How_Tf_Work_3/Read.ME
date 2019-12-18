@@ -1,0 +1,35 @@
+# How To Use TF 的一些理解(基于前馈NN)
+1. 输入输出需要占位符即placeholder。可以理解为TF的运行模式是先构建schema，构建完成后，再将数据灌输进行。再本部分代码中，是体现在：
+```
+def placeholder_inputs(batch_size):
+  images_placeholder = tf.placeholder(tf.float32, shape=(batch_size,
+                                               mnist.IMAGE_PIXELS))
+  # 图像占位符：维度是：batchsize，单例子的Size。
+  labels_placeholder = tf.placeholder(tf.int32, shape=(batch_size))
+  # 标签占位符，维度是：batchsize
+  return images_placeholder, labels_placeholder
+```
+2. 接下来需要进行构图，无论是什么网络，都需要有一种网络表示。详参：
+inference()函数会尽可能地构建图表，做到返回包含了预测结果（output prediction）的Tensor。图像占位符是输入，在每一层使用Relu函数对Hidden层进行激活，构建全连接的NN。
+tf.name_scope的作用是每个独立的层都用其来创建，(创建于该作用域之下的所有元素都将带有其前缀。).然后，使用tf.Variable()生成weight和bias。
+```
+  with tf.name_scope('hidden1'):
+    weights = tf.Variable(
+
+        tf.truncated_normal([IMAGE_PIXELS, hidden1_units],
+                            stddev=1.0 / math.sqrt(float(IMAGE_PIXELS))),
+        name='weights')
+    biases = tf.Variable(tf.zeros([hidden1_units]),
+                         name='biases')
+    hidden1 = tf.nn.relu(tf.matmul(images, weights) + biases)
+```
+【tf.truncated_normal(shape,mean,stddev)#shape表示生成Tensor的维度，mean是均值，stddev是标准差这个函数产生正太分布，均值和标准差自己设定。
+这是一个截断的产生正太分布的函数，就是说产生正太分布的值如果与均值的差值大于两倍的标准差，那就重新生成.然后这个函数生成的是固定维度[input_size,hidden_size]的Tensor】
+tf.name_scope第一个维度是inputsize和hiddensize，然后使用：
+```
+hidden1 = tf.nn.relu(tf.matmul(images, weights) + biases) 进行激活，或者说是非线性映射作为下一层的输入
+```
+第二个维度是hiddden1size，hidden2size，同时用Relu来激活。
+第三个维度是hidden2size，outputsize。
+3. 损失函数：
+loss()添加所需的损失操作，进一步构图。
