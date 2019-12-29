@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author  : Leslee
 import  tensorflower as tf
-from com.hiekn.tensorflow.Mnist_TF_work_1_2 import input_data
+from tensorflow.examples.tutorials.mnist import input_data
 
 print("开始下载数据集..")
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)

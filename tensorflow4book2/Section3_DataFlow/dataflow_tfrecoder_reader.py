@@ -25,11 +25,17 @@ features = tf.parse_single_example(
 print(features)
 
 init_read_op = tf.global_variables_initializer()
+# 创建线程协调器需要重新构造初始化参数
+
 sess = tf.Session()
 sess.run(init_read_op)
 # 启动执行入队操作的后台线程
-tf.train.start_queue_runners(sess=sess)
-
+threads = tf.train.start_queue_runners(sess=sess)
+print("Threads:%s" % threads)
+# 读取数据
+for i in range(2):
+    example = sess.run(features)
+    print(example)
 
 
 
