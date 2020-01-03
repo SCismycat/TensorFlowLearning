@@ -10,3 +10,4 @@ gen
 data
 *.tfrecord
 model
+MNIST_data

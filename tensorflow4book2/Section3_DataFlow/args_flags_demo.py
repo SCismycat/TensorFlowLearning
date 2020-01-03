@@ -12,7 +12,7 @@ FLAGS = flags.FLAGS
 def main(_):
     print(FLAGS.data_dir)
 
-
+tf.train.match_filenames_once
 if __name__ == '__main__':
     tf.app.run()
 

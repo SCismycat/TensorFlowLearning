@@ -47,5 +47,4 @@ with tf.Session() as sess:
     # 评估模型
     correct_prediction = tf.equal(tf.argmax(y,1),tf.argmax(y_,1))
     accuarcy = tf.reduce_mean(tf.cast(correct_prediction,"float"))
-
     print(accuarcy.eval(feed_dict={x:mnist.test.images,y_:mnist.test.labels}))# 使用softmax取得效果有限
